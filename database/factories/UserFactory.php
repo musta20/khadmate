@@ -29,7 +29,37 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role' => $this->faker->randomElement(['client', 'freelancer', 'admin']),
+            'bio' => $this->faker->paragraph(),
+            'avatar' => null, // You could generate a random avatar URL here if needed
+ 
         ];
+    }
+    public function client()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'client',
+            ];
+        });
+    }
+
+    public function freelancer()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'freelancer',
+            ];
+        });
+    }
+
+    public function admin()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => 'admin',
+            ];
+        });
     }
 
     /**

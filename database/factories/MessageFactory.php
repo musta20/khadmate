@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,32 @@ class MessageFactory extends Factory
      */
     public function definition(): array
     {
+        $sender = User::factory()->create();
+        $receiver = User::factory()->create();
+
         return [
-            //
+            'sender_id' => $sender->id,
+            'receiver_id' => $receiver->id,
+            'content' => $this->faker->paragraph(),
+            'read' => $this->faker->boolean(),
         ];
+    }
+
+    public function unread()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'read' => false,
+            ];
+        });
+    }
+
+    public function read()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'read' => true,
+            ];
+        });
     }
 }
