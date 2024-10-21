@@ -12,8 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
-            $table->id();
+
+            $table->ulid('id')->primary();
+            $table->ulid('user_id');
+            $table->ulid('category_id');
+            $table->string('title');
+            $table->text('description');
+            $table->decimal('price', 10, 2);
+            $table->integer('delivery_time'); // in days
+            $table->enum('status', ['active', 'paused', 'deleted'])->default('active');
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+        
         });
     }
 

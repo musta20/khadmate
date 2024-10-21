@@ -12,8 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
+            $table->ulid('sender_id');
+            $table->ulid('receiver_id');
+            $table->text('content');
+            $table->boolean('read')->default(false);
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
+ 
         });
     }
 
