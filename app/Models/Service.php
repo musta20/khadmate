@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class Service extends Model
@@ -35,6 +36,60 @@ class Service extends Model
     const STATUS_PAUSED = 'paused';
     const STATUS_DELETED = 'deleted';
 
+
+    /**
+     * Get all images for the service.
+     */
+    public function images()
+    {
+        return $this->hasMany(ServiceImage::class)->orderBy('order');
+    }
+
+    /**
+     * Get the primary image for the service.
+     */
+    public function primaryImage(): HasOne
+    {
+        return $this->hasOne(ServiceImage::class)
+            ->where('is_primary', true);    
+    }
+
+    /**
+     * Get the primary image path or default image.
+     */
+//     public function getPrimaryImageAttribute()
+//     {
+//   // Load the relationship if it hasn't been loaded
+//         if (!$this->relationLoaded('primaryImage')) {
+//             $this->load('primaryImage');
+//         }
+
+//         if (!$this->relationLoaded('images')) {
+//             $this->load('images');
+//         }
+
+//         // Check for primary image
+//         if ($this->primaryImage) {
+//             return $this->primaryImage->image_path;
+//         }
+
+//         // Check for any image
+//         if ($this->images->isNotEmpty()) {
+//             return $this->images->first()->image_path;
+//         }
+
+//         // Return default image
+//         return 'images/default-service-image.jpg';
+//     }
+
+    /**
+     * Set the primary image for the service.
+     */
+    public function setPrimaryImage($imageId)
+    {
+        $this->images()->update(['is_primary' => false]);
+        $this->images()->where('id', $imageId)->update(['is_primary' => true]);
+    }
     /**
      * Get the freelancer who owns the service.
      */

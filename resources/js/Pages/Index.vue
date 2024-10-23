@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { debounce } from 'lodash';
-import ServiceCard from '@/Components/ServiceCard.vue';
+import ServiceCard from '@/Components/ServicesCard.vue';
 // import Pagination from '@/Components/Pagination.vue';
 import MainLayout from '@/Layouts/MainLayout.vue';
 const props =  defineProps<{

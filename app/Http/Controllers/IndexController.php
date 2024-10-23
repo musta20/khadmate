@@ -11,27 +11,33 @@ class IndexController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Service::with(['freelancer', 'category'])
-            ->active();
-            // ->when($request->category, function ($query, $category) {
-            //     $query->where('category_id', $category);
-            // })
-            // ->when($request->search, function ($query, $search) {
-            //     $query->where(function ($q) use ($search) {
-            //         $q->where('title', 'like', "%{$search}%")
-            //           ->orWhere('description', 'like', "%{$search}%");
-            //     });
-            // })
-            // ->when($request->min_price, function ($query, $minPrice) {
-            //     $query->where('price', '>=', $minPrice);
-            // })
-            // ->when($request->max_price, function ($query, $maxPrice) {
-            //     $query->where('price', '<=', $maxPrice);
-            // });
+        $services = Service::with(['freelancer', 'category', 'primaryImage'])
+        ->active()
+        // ->when($request->search, function ($query, $search) {
+        //     $query->where(function ($q) use ($search) {
+        //         $q->where('title', 'like', "%{$search}%")
+        //           ->orWhere('description', 'like', "%{$search}%");
+        //     });
+        // })
+       // ->take(12)->get();
+        ->paginate(12)
+        ->through(function ($service) {
+            return [
+                'id' => $service->id,
+                'title' => $service->title,
+                'price' => $service->price,
+                'freelancer' => $service->freelancer,
+                'category' => $service->category,
+                'primary_image' => $service->primaryImage,
+                'average_rating' => $service->averageRating(),
+            ];
+        });
 
-        $services = $query->latest()->paginate(12)->withQueryString();
+        // dd($services[0]);
         $categories = Category::all();
 
+
+ 
         return Inertia::render('Index', [
             'services' => $services,
             'categories' => $categories,
