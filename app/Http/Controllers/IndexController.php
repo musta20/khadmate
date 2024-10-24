@@ -29,14 +29,12 @@ class IndexController extends Controller
                 'freelancer' => $service->freelancer,
                 'category' => $service->category,
                 'primary_image' => $service->primaryImage,
-                'average_rating' => $service->averageRating(),
+                'average_rating' => number_format($service->averageRating(), 1),
             ];
         });
 
         // dd($services[0]);
         $categories = Category::all();
-
-
  
         return Inertia::render('Index', [
             'services' => $services,
@@ -44,4 +42,37 @@ class IndexController extends Controller
             'filters' => $request->only(['search', 'category', 'min_price', 'max_price'])
         ]);
     }
+
+
+    public function serviceShow(Service $service)
+    {
+        $service->load([
+            'freelancer',
+            'category',
+            'images',
+            'reviews' => fn($query) => $query->with('reviewer')->latest()->limit(5)
+        ]);
+       
+       // dd($service->getStatistics());
+        return Inertia::render('Services/Show', [
+            'service' => array_merge($service->toArray(), [
+                'primary_image' => $service->primaryImage,
+                'average_rating' => number_format($service->averageRating(), 1),
+                'total_reviews' => $service->totalReviews(),
+                'rating_distribution' => $service->getRatingDistribution(),
+                'statistics' => $service->getStatistics(),
+            ]),
+            // 'can' => [
+            //     'update' => Auth::user()?->can('update', $service) ?? false,
+            //     'delete' => Auth::user()?->can('delete', $service) ?? false,
+            // ]
+        ]);
+    }
+
+
+
+
+
+
+
 }

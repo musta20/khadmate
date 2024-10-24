@@ -17,6 +17,7 @@ use Inertia\Inertia;
 
 
 Route::get('/', [IndexController::class, 'index'])->name('welcome');
+Route::get('/services/{service}', [IndexController::class, 'serviceShow'])->name('serviceShow');
 
 
 Route::get('/dashboard', function () {
