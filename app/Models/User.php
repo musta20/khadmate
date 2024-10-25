@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -59,7 +60,7 @@ class User extends Authenticatable
      */
     public function services()
     {
-        return $this->hasMany(Service::class, 'user_id');
+        return $this->hasMany(Service::class, 'freelancer_id');
     }
 
     /**
@@ -97,9 +98,13 @@ class User extends Authenticatable
     /**
      * Get the reviews that the user has received.
      */
-    public function reviewsReceived()
+    public function reviewsReceived(): HasMany
     {
-        return $this->hasMany(Review::class, 'reviewee_id');
+        return $this->hasMany( 
+            related:Review::class,
+            foreignKey: 'reviewee_id',
+            localKey:'id'
+        );
     }
 
     /**
@@ -180,5 +185,9 @@ class User extends Authenticatable
     public function averageRating()
     {
         return $this->reviewsReceived()->avg('rating');
+        // return $this->services()
+        //     ->withAvg('reviews', 'rating')
+        //     ->first()
+        //     ->reviews_avg_rating ?? 0;
     }
 }

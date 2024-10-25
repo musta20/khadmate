@@ -18,12 +18,12 @@ class ReviewSeeder extends Seeder
 
         foreach ($completedOrders as $order) {
             // 80% chance of client leaving a review
-            if (rand(1, 100) <= 80) {
+            if (rand(1, 100) <= 90) {
                 Review::factory()->fromClient()->create(['order_id' => $order->id]);
             }
 
             // 60% chance of freelancer leaving a review
-            if (rand(1, 100) <= 60) {
+            if (rand(1, 100) <= 90) {
                 Review::factory()->fromFreelancer()->create(['order_id' => $order->id]);
             }
         }

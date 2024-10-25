@@ -26,7 +26,8 @@ class IndexController extends Controller
                 'id' => $service->id,
                 'title' => $service->title,
                 'price' => $service->price,
-                'freelancer' => $service->freelancer,
+                'freelancer' =>$service->freelancer,
+                  
                 'category' => $service->category,
                 'primary_image' => $service->primaryImage,
                 'average_rating' => number_format($service->averageRating(), 1),
@@ -47,20 +48,27 @@ class IndexController extends Controller
     public function serviceShow(Service $service)
     {
         $service->load([
-            'freelancer',
             'category',
             'images',
             'reviews' => fn($query) => $query->with('reviewer')->latest()->limit(5)
         ]);
        
-       // dd($service->getStatistics());
-        return Inertia::render('Services/Show', [
+       $freelancer = [
+        'id' => $service->freelancer->id,
+        'name' => $service->freelancer->name,
+        'average_rating' => $service->freelancer->reviewsReceived(),
+        'avatar' => $service->freelancer->avatar,
+        ];
+
+          return Inertia::render('Services/Show', [
             'service' => array_merge($service->toArray(), [
+              'freelancer'  =>  $freelancer,
                 'primary_image' => $service->primaryImage,
                 'average_rating' => number_format($service->averageRating(), 1),
                 'total_reviews' => $service->totalReviews(),
                 'rating_distribution' => $service->getRatingDistribution(),
                 'statistics' => $service->getStatistics(),
+                'images'=>$service->images
             ]),
             // 'can' => [
             //     'update' => Auth::user()?->can('update', $service) ?? false,

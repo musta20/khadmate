@@ -1,36 +1,87 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { debounce } from 'lodash';
 import ServiceCard from '@/Components/ServicesCard.vue';
-// import Pagination from '@/Components/Pagination.vue';
 import MainLayout from '@/Layouts/MainLayout.vue';
 import ReviewCard from '@/Components/ReviewCard.vue';
-const props =  defineProps<{
+import Carousel from 'primevue/carousel';
 
-  service: Object,
+interface Service {
+  title: string;
+  average_rating: number;
+  freelancer: {
+    name: string;
+    avatar: string | null;
+  };
+  description: string;
+  reviews: any[];
+  price: number;
+  delivery_time: string;
+  statistics: {
+    total_orders: number;
+    active_orders: number;
+  };
+  images: any[];
+}
 
+const props = defineProps<{
+  service: Service;
 }>();
 
- </script>
+const responsiveOptions = ref([
+    {
+        breakpoint: '1400px',
+        numVisible: 2,
+        numScroll: 1
+    },
+    {
+        breakpoint: '1199px',
+        numVisible: 3,
+        numScroll: 1
+    },
+    {
+        breakpoint: '767px',
+        numVisible: 2,
+        numScroll: 1
+    },
+    {
+        breakpoint: '575px',
+        numVisible: 1,
+        numScroll: 1
+    }
+]);
+
+const freelancerInitial = computed(() => {
+  return props.service.freelancer.name.charAt(0).toUpperCase();
+});
+
+</script>
 <template>
     <MainLayout>
       <div class="flex gap-2 w-full">
         <div class="flex border rounded-lg w-full h-auto flex-col">
-          <div class="rounded-lg w-full  font-bold antialiased text-gray-800  flex flex-col    ">
-        <img    :src="'/service/'+service.primary_image.image_path"
-        class="rounded-lg max-h-[35rem]   m-2 bg-slate-500" />
+ 
+          <div   class="rounded-lg w-full  font-bold antialiased text-gray-800  flex flex-col    ">
 
-        <div class="flex  p-5 gap-5  ">
-                    <img
-                        :src="service.freelancer.avatar || '/storage/user-circle-svgrepo-com.svg'"
-                        :alt="service.freelancer.name"
-                        class="w-10 rounded-full  "
-                    />
-                    <span class="text-lg my-auto text-gray-600">{{ service.freelancer.name }}</span>
-                </div>
-        <div class="flex justify-between p-3">
-            <div>{{ service.title }}</div>
+        <!-- <img    :src="'/service/'+service.primary_image.image_path"
+        class="rounded-lg max-h-[35rem]   m-2 bg-slate-500" /> -->
+
+
+         <Carousel dir="ltr" :value="service.images" :numVisible="1" :numScroll="1" :responsiveOptions="responsiveOptions">
+           <template #item="slotProps">
+   
+ 
+         <img    :src="'/service/'+slotProps.data.image_path"
+        class="rounded-lg w-full max-h-[35rem]   m-2 bg-slate-500" />
+
+    </template>
+</Carousel>
+
+
+
+<div class="flex justify-between w-2/6  mx-auto p-3">
+            <div class="text-3xl font-extrabold ">{{ service.title }}</div>
 
             <div class=" flex   w-2/12  gap-1      ">          
                  <div class="my-auto ">{{ service?.average_rating >0 ? service.average_rating : "new" }}</div>
@@ -41,6 +92,22 @@ const props =  defineProps<{
             
             </div>
         </div>
+
+        <div class="flex p-5 gap-2">
+            <div v-if="service.freelancer.avatar" class="w-10 h-10 rounded-full overflow-hidden">
+                <img
+                    :src="service.freelancer.avatar"
+                    :alt="service.freelancer.name"
+                    class="w-full h-full object-cover"
+                />
+            </div>
+            <div v-else class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-bold">
+                {{ freelancerInitial }}
+            </div>
+            <span class="text-lg my-auto text-gray-600">{{ service.freelancer.name }}</span>
+        </div>
+
+        <hr>
 
         <p class="p-5">
       {{ service.description }}
@@ -64,9 +131,10 @@ const props =  defineProps<{
 
             <div class="flex w-5/6 mx-auto justify-between">
               <div class="flex gap-2">
+
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
 
                 السعر</div>
               <div>  {{ service.price }} $</div>
@@ -75,8 +143,8 @@ const props =  defineProps<{
             <div class="flex w-5/6 mx-auto justify-between">
               <div class="flex gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-</svg>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
 
                 مدة التسليم</div>
               <div>{{ service.delivery_time }}</div>
@@ -85,8 +153,8 @@ const props =  defineProps<{
             <div class="flex w-5/6 mx-auto justify-between">
               <div class="flex gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 0 0 1 16.954 9h4.636M2.41 9a2.25 2.25 0 0 0-.16.832V12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 12V9.832c0-.287-.055-.57-.16-.832M2.41 9a2.25 2.25 0 0 1 .382-.632l3.285-3.832a2.25 2.25 0 0 1 1.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5 20.25h15A2.25 2.25 0 0 0 21.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 0 0 2.25 2.25Z" />
-</svg>
+              <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 0 0 1 16.954 9h4.636M2.41 9a2.25 2.25 0 0 0-.16.832V12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 12V9.832c0-.287-.055-.57-.16-.832M2.41 9a2.25 2.25 0 0 1 .382-.632l3.285-3.832a2.25 2.25 0 0 1 1.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5 20.25h15A2.25 2.25 0 0 0 21.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 0 0 2.25 2.25Z" />
+            </svg>
 
                 عدد الطلبات</div>
               <div>{{ service.statistics.total_orders }}</div>
@@ -113,3 +181,4 @@ const props =  defineProps<{
   </MainLayout>
   
 </template>
+

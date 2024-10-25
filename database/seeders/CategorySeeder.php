@@ -16,16 +16,16 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            'Web Development',
-            'Mobile App Development',
-            'Graphic Design',
-            'Digital Marketing',
-            'Writing & Translation',
-            'Video & Animation',
-            'Music & Audio',
-            'Programming & Tech',
-            'Data Entry',
-            'Business',
+            'تطوير الويب',
+            'تطوير تطبيقات الجوال',
+            'التصميم الجرافيكي',
+            'التسويق الرقمي',
+            'الكتابة والترجمة',
+            'الفيديو والرسوم المتحركة',
+            'الموسيقى والصوت',
+            'البرمجة والتكنولوجيا',
+            'إدخال البيانات',
+            'الأعمال',
         ];
 
         foreach ($categories as $category) {

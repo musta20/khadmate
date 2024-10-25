@@ -25,7 +25,7 @@ class OrderSeeder extends Seeder
              foreach ($services as $service) {
      
                  Order::factory()
-                     ->count(3)
+                     ->count(5)
                      ->create([
                          'service_id' => $service->id,
                          'client_id' => $clients->random()->id,
