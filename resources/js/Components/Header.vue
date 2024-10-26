@@ -30,7 +30,7 @@ const isHomePage = computed(() => currentRoute.value === '/');
             <nav class="flex font-semibold ">
                 <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150"  href="/" >الرئيسية</Link>
                 <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150" href="/">الخدمات</Link>
-                <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150" href="/">تسجيل الدخول</Link>
+                <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150"  href="/login">تسجيل الدخول</Link>
                 <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150" href="/">بع خدماتك</Link>
                 <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150" href="/">جميع التصنيفات</Link>
             </nav>
