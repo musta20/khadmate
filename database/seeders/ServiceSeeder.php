@@ -27,7 +27,7 @@ class ServiceSeeder extends Seeder
         //$imageNames = $this->getImageNamesFromStorage();
 
         // Get all freelancer users
-        $freelancers = User::where('role', 'freelancer')->get();
+        $freelancers = User::where('role', 'freelancer')->orWhere('role', 'admin')->get();
 
         // Get all categories
         $categories = Category::all();

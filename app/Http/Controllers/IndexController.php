@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Session;
 
 class IndexController extends Controller
 {
@@ -37,10 +38,18 @@ class IndexController extends Controller
         // dd($services[0]);
         $categories = Category::all();
  
+        // Assuming you want to pass some session data to the view
+        $sessionData = [
+            'user' => Session::get('user'),
+            'isLoggedIn' => Session::has('user'),
+            // Add any other session data you want to pass
+        ];
+
         return Inertia::render('Index', [
             'services' => $services,
             'categories' => $categories,
-            'filters' => $request->only(['search', 'category', 'min_price', 'max_price'])
+            'filters' => $request->only(['search', 'category', 'min_price', 'max_price']),
+            'sessionData' => $sessionData,
         ]);
     }
 

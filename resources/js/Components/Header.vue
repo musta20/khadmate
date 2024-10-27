@@ -5,10 +5,12 @@ import { computed } from 'vue';
 
 const currentRoute = computed(() => usePage().url);
 const isHomePage = computed(() => currentRoute.value === '/');
+// Access the session data
+ 
 </script>
 <template>
-    <header class="my-5 rounded-lg bg-[#6A9C89] " >
-        <div class="w-full text-white text-md flex p-3 justify-between transition-all duration-150" >
+    <header class="my-5 rounded-lg bg-[#6A9C89]">
+        <div class="w-full text-white text-md flex p-3 justify-between transition-all duration-150">
             <div class="font-extrabold p-3">خدماتي</div>
             <form dir="ltr" v-if="!isHomePage" class="w-2/6 mx-auto">   
                     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -28,21 +30,41 @@ const isHomePage = computed(() => currentRoute.value === '/');
                 </form>
 
             <nav class="flex font-semibold ">
-                <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150"  href="/" >الرئيسية</Link>
-                <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150" href="/">الخدمات</Link>
-                <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150"  href="/login">تسجيل الدخول</Link>
-                <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150" href="/">بع خدماتك</Link>
-                <Link class="hover:bg-[#5da785] p-3 rounded-lg transition-all duration-150" href="/">جميع التصنيفات</Link>
+                <Link class="hover:bg-[#9ac2af] p-3 rounded-lg transition-all duration-150"  href="/" >الرئيسية</Link>
+                <Link class="hover:bg-[#9ac2af] p-3 rounded-lg transition-all duration-150" href="/">الخدمات</Link>
+                
+                <!-- Conditional rendering based on login status -->
+      
+
+                <Link class="hover:bg-[#9ac2af] p-3 rounded-lg transition-all duration-150" href="/">بع خدماتك</Link>
+                <Link class="hover:bg-[#9ac2af] p-3 rounded-lg transition-all duration-150" href="/">جميع التصنيفات</Link>
+
+                <div v-if="$page.props.auth.user">
+                    <span class="p-3">مرحبا، {{ $page.props.auth.user.name }}</span>
+                    
+                        
+                    <Link class="hover:bg-[#9ac2af] p-3 rounded-lg transition-all duration-150" href="/dashboard">لوحة التحكم</Link>
+                    <Link class="hover:bg-[#9ac2af] p-3 rounded-lg transition-all duration-150" 
+                    :href="route('getlogout')" 
+                    method="get" 
+                    as="button">تسجيل الخروج</Link>
+                </div>
+                <div class='p-3' v-else>
+                    <Link class="hover:bg-[#9ac2af] p-3 rounded-lg transition-all duration-150" href="/login">تسجيل الدخول</Link>
+                </div>
             </nav>
 
  
         </div>
+        
 
 
         <div v-if="isHomePage" class="w-4/6 mx-auto flex flex-col  p-5 items-center justify-between">
+
             <div class="text-6xl font-extrabold text-white [text-shadow:_0px_10px_10px_rgb(0_0_0_/_60%)]">
                 اطلقي العنان لإبداعاتكي الرقمية
             </div>
+            
             <img :src="workerImage" alt="Worker" class="-mt-4 mr-32 h-auto">
 
                 <form dir="ltr" class="w-4/6 mx-auto">   

@@ -23,9 +23,9 @@ class ReviewSeeder extends Seeder
             }
 
             // 60% chance of freelancer leaving a review
-            if (rand(1, 100) <= 90) {
-                Review::factory()->fromFreelancer()->create(['order_id' => $order->id]);
-            }
+            // if (rand(1, 100) <= 90) {
+            //     Review::factory()->fromFreelancer()->create(['order_id' => $order->id]);
+            // }
         }
     }
 }
