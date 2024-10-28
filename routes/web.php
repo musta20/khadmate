@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,7 +24,8 @@ Route::get('/services/{service}', [IndexController::class, 'serviceShow'])->name
 // New admin route group
 Route::group(['as' => 'dashboard.', 'middleware' => ['auth'], 'prefix' => 'dashboard'],function () {
     Route::get('/', [DashboardController::class, 'index']) ;
-    Route::get('servicesList', [DashboardController::class, 'servicesList'])->name('servicesList');
+    Route::resource('service',ServiceController::class);
+   // Route::get('servicesList', [DashboardController::class, 'servicesList'])->name('servicesList');
     
     // Add your admin routes here
     // Route::get('/dashboard', function () {

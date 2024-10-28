@@ -43,7 +43,7 @@ class ServiceController extends Controller
 
         $services = $query->paginate(12)->withQueryString();
 
-        return Inertia::render('Services/Index', [
+        return Inertia::render('Dashboard/Services/Services', [
             'services' => $services,
             'filters' => $request->only(['search', 'category', 'min_price', 'max_price']),
             'categories' => Category::all()
@@ -55,9 +55,7 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Service::class);
-
-        return Inertia::render('Services/Create', [
+        return Inertia::render('Dashboard/Services/Create', [
             'categories' => Category::all()
         ]);
     }
@@ -136,12 +134,8 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-        $this->authorize('update', $service);
-
-        return Inertia::render('Services/Edit', [
-            'service' => array_merge($service->load('images')->toArray(), [
-                'primary_image_path' => $service->primary_image_path
-            ]),
+        return Inertia::render('Dashboard/Services/Edit', [
+            'service' => $service->load('images'),
             'categories' => Category::all()
         ]);
     }

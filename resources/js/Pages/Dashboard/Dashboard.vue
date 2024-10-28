@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import MainDashboardMenu from '@/Components/MainDashbiardMenu.vue'
+import MainDashboardMenu from '@/Components/MainDashboardMenu.vue'
 import MainLayout from '@/Layouts/MainLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>

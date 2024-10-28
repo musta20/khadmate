@@ -24,7 +24,7 @@ class DashboardController extends Controller
   public function servicesList(){
     $user = Auth::user();
     $services = Service::where('user_id', $user->id)->paginate(10);
-     return Inertia::render('Dashboard/Services', [
+     return Inertia::render('Dashboard/Services/Services', [
         'services' => $services
     ]);
     
